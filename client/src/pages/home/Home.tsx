@@ -7,18 +7,15 @@ import { TableRow } from '../../components/table/TableRow'
 import { TableCell } from '../../components/table/TableCell'
 import { Button } from '../../components/Button'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { getUsers, removeUser, selectUsers, selectUsersStatus } from '../../features/users/usersSlice'
+import { getUsers, removeUser, selectUsers } from '../../features/users/usersSlice'
 
 export default function Home() {
   const dispatch = useAppDispatch()
   const users = useAppSelector(selectUsers)
-  const status = useAppSelector(selectUsersStatus)
 
   useEffect(() => {
-    if (status === 'idle') {
-      dispatch(getUsers())
-    }
-  }, [status, dispatch])
+    dispatch(getUsers())
+  }, [dispatch])
 
   const handleRemove = async (userId: number) => {
     try {
@@ -36,7 +33,7 @@ export default function Home() {
     <div className="h-screen bg-slate-900 flex items-center justify-center">
       <div className="w-[90%] max-w-6xl space-y-4">
         <Card variant="elevated" padding="none">
-          <Table>
+          <Table layout="fixed">
             <TableHeader variant="glow" sticky>
               <TableRow variant="header">
                 <TableCell isHeader variant="glow">First Name</TableCell>

@@ -14,14 +14,10 @@ interface User {
 
 interface UsersState {
   users: User[]
-  status: 'idle' | 'loading' | 'succeeded' | 'failed'
-  error: string | null
 }
 
 const initialState: UsersState = {
-  users: [],
-  status: 'idle',
-  error: null
+  users: []
 }
 
 export const getUsers = createAsyncThunk(
@@ -36,12 +32,9 @@ export const getUsers = createAsyncThunk(
 export const removeUser = createAsyncThunk(
   'users/removeUser',
   async (userId: number) => {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
       method: 'DELETE',
     });
-    if (!response.ok) {
-      throw new Error('Failed to remove user');
-    }
     return userId;
   }
 );
@@ -52,32 +45,14 @@ export const usersSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getUsers.pending, (state) => {
-        state.status = 'loading'
-      })
       .addCase(getUsers.fulfilled, (state, action) => {
-        state.status = 'succeeded'
         state.users = action.payload
       })
-      .addCase(getUsers.rejected, (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message || 'Something went wrong'
-      })
-      .addCase(removeUser.pending, (state) => {
-        state.status = 'loading'
-      })
       .addCase(removeUser.fulfilled, (state, action) => {
-        state.status = 'succeeded'
         state.users = state.users.filter(user => user.user_id !== action.payload)
-      })
-      .addCase(removeUser.rejected, (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message || 'Failed to remove user'
       })
   },
 })
 
 export const selectUsers = (state: RootState) => state.users.users
-export const selectUsersStatus = (state: RootState) => state.users.status
-export const selectUsersError = (state: RootState) => state.users.error
 export default usersSlice.reducer 

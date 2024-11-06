@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, Children } from "react";
 
 const tableBodyVariants = cva([""], {
   variants: {
@@ -30,12 +30,26 @@ export function TableBody({
   variant,
   dividers,
   className = "",
+  children,
   ...props
 }: TableBodyProps) {
+  const hasChildren = Children.count(children) > 0;
+
   return (
     <tbody
       className={tableBodyVariants({ variant, dividers, className })}
       {...props}
-    />
+    >
+      {hasChildren ? children : (
+        <tr>
+          <td 
+            colSpan={7} 
+            className="text-center text-slate-500"
+          >
+            No data available
+          </td>
+        </tr>
+      )}
+    </tbody>
   );
 } 

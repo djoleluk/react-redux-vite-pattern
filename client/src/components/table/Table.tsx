@@ -23,9 +23,17 @@ const tableVariants = cva(
         ],
         simple: "bg-transparent",
       },
+      layout: {
+        default: "",
+        fixed: [
+          "h-[calc(100vh-8rem)]",
+          "table-fixed",
+        ],
+      }
     },
     defaultVariants: {
       variant: "default",
+      layout: "default",
     },
   }
 );
@@ -36,13 +44,16 @@ interface TableProps
 
 export function Table({
   variant,
+  layout,
   className = "",
   ...props
 }: TableProps) {
+  const isFixed = layout === 'fixed';
+  
   return (
     <div className="relative isolate">
       <div className={`
-        max-h-[500px] overflow-auto rounded-lg ring-2 ring-slate-400
+        overflow-auto rounded-lg ring-2 ring-slate-400
         [&::-webkit-scrollbar]:w-3
         [&::-webkit-scrollbar]:h-3
         [&::-webkit-scrollbar-track]:bg-slate-800
@@ -54,9 +65,10 @@ export function Table({
         hover:[&::-webkit-scrollbar-thumb]:bg-slate-500
         [&::-webkit-scrollbar-thumb]:transition-colors
         [&::-webkit-scrollbar-thumb]:duration-150
+        ${isFixed ? 'h-[calc(100vh-8rem)]' : ''}
         pr-2
       `}>
-        <table className={tableVariants({ variant, className })} {...props} />
+        <table className={tableVariants({ variant, layout, className })} {...props} />
       </div>
     </div>
   );

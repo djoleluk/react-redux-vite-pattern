@@ -18,14 +18,14 @@ server.use(bodyParser.json());
 server.use(cors());
 
 // Serve static files from the React app
-server.use(express.static(path.join(__dirname, '../client/build')));
+server.use(express.static(path.join(__dirname, '../client/dist')));
 
 // app router
 server.use(config.routes.root, router);
 
 // Catch-all handler to serve the React app for any unhandled routes
 server.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
 // run the server
