@@ -2,7 +2,8 @@ const WebSocket = require('ws');
 const config = require('../../config/server-config');
 
 const {
-    fetchPendingUsersRequests
+    getUsers,
+    removeUser
 } = require('./queries');
 
 // dotenv configured
@@ -22,8 +23,11 @@ wsServer.on('connection', wsSocket => {
 // function to interact with db tables and send a response to client
 async function contactTableAndRespond(request, webSocket) {
     switch(request.action) {
-        case config.actions.fetch_pending_users_requests:
-            await fetchPendingUsersRequests(webSocket);
+        case config.actions.get_users:
+            await getUsers(webSocket);
+            break;
+        case config.actions.remove_user:
+            await removeUser(request.userId, webSocket);
             break;
         default:
             console.log(`Unhandled action: ${request.action}`);

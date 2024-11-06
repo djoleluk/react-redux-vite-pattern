@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import pendingUsersReducer from '../features/pendingUsers/pendingUsersSlice'
+import usersReducer from '../features/users/usersSlice'
 
 export const store = configureStore({
   reducer: {
-    pendingUsers: pendingUsersReducer,
+    users: usersReducer,
   },
 })
 

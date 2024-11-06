@@ -7,35 +7,34 @@ import { TableRow } from '../../components/table/TableRow'
 import { TableCell } from '../../components/table/TableCell'
 import { Button } from '../../components/Button'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { fetchPendingUsers, selectPendingUsers, selectPendingUsersStatus, selectPendingUsersError } from '../../features/pendingUsers/pendingUsersSlice'
+import { getUsers, removeUser, selectUsers, selectUsersStatus } from '../../features/users/usersSlice'
 
 export default function Home() {
   const dispatch = useAppDispatch()
-  const users = useAppSelector(selectPendingUsers)
-  const status = useAppSelector(selectPendingUsersStatus)
-  const error = useAppSelector(selectPendingUsersError)
+  const users = useAppSelector(selectUsers)
+  const status = useAppSelector(selectUsersStatus)
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchPendingUsers())
+      dispatch(getUsers())
     }
   }, [status, dispatch])
 
-  const handleRemove = (index: number) => {
-    console.log(`Removing user at index ${index}`)
+  const handleRemove = async (userId: number) => {
+    try {
+      await dispatch(removeUser(userId)).unwrap()
+    } catch (err) {
+      console.error('Failed to remove user:', err)
+    }
   }
 
-  if (status === 'loading') {
-    return <div>Loading...</div>
-  }
-
-  if (status === 'failed') {
-    return <div>Error: {error}</div>
+  const handleRefresh = () => {
+    dispatch(getUsers())
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="h-screen bg-slate-900 flex items-center justify-center">
+      <div className="w-[90%] max-w-6xl space-y-4">
         <Card variant="elevated" padding="none">
           <Table>
             <TableHeader variant="glow" sticky>
@@ -50,7 +49,7 @@ export default function Home() {
               </TableRow>
             </TableHeader>
             <TableBody variant="default" dividers="thin">
-              {users.map((user, index) => (
+              {users.map((user) => (
                 <TableRow key={user.user_id}>
                   <TableCell>{user.first_name}</TableCell>
                   <TableCell>{user.last_name}</TableCell>
@@ -62,7 +61,7 @@ export default function Home() {
                     <Button
                       variant="danger"
                       size="tiny"
-                      onClick={() => handleRemove(index)}
+                      onClick={() => handleRemove(user.user_id)}
                     >
                       Remove
                     </Button>
@@ -72,6 +71,15 @@ export default function Home() {
             </TableBody>
           </Table>
         </Card>
+        <div className="flex justify-center">
+          <Button
+            variant="secondary"
+            size="medium"
+            onClick={handleRefresh}
+          >
+            Refresh
+          </Button>
+        </div>
       </div>
     </div>
   )

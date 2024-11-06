@@ -1,5 +1,7 @@
-const fetchPendingUsersRequests = require('./user/fetchPendingUsersRequests');
+const getUsers = require('./user/getUsers');
+const removeUser = require('./user/removeUser');
 
 module.exports = {
-    fetchPendingUsersRequests
+    getUsers,
+    removeUser
 };

@@ -1,6 +1,6 @@
 // import express module and controllers
 const express = require('express');
-const itemsController = require('../controllers/items-controller');
+const serverController = require('../controllers/server-controller');
 const config = require('../config/server-config');
 const multer = require('multer');
 
@@ -23,7 +23,8 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 // declare routes
-router.get(config.routes.pending_user_requests_route, itemsController.getPendingUserRequests);
+router.get(config.routes.get_users_route, serverController.getUsers);
+router.delete(config.routes.remove_user_route, serverController.removeUser);
 // add more routes...
 
 // export the router

@@ -8,10 +8,13 @@ const fs = require('fs').promises;
 
 // dotenv configured
 require('dotenv').config();
+ 
+exports.getUsers = (req, res) => {
+	respondToClient(res, config.ports.database_service_port, { action: config.actions.get_users }); 
+};
 
-// fetch all pending user requests function 
-exports.getPendingUserRequests = (req, res) => {
-	respondToClient(res, config.ports.database_service_port, { action: config.actions.fetch_pending_users_requests }); 
+exports.removeUser = (req, res) => {
+    respondToClient(res, config.ports.database_service_port, { action: config.actions.remove_user, userId: parseInt(req.params.user_id) });
 };
 
 // abstracting the common code used to get available websocket client and send response to the client 
@@ -41,8 +44,8 @@ function sendDataToModel(res, wsClient, data) {
 // function to run different json response to the client based on the data received from another backend service
 function respond(res, data) {
     switch (data.action) {
-        case config.actions.fetch_pending_user_requests_response: res.json(data.payload); break;
-        case config.actions.fetch_registered_users_response: res.json(data.payload); break;
+        case config.actions.get_users_response: res.json(data.payload); break;
+        case config.actions.remove_user_response: res.json(data.payload); break;
         // .. add more responses..
     }
 }
@@ -55,6 +58,8 @@ function getWebSocketClient(port) {
   }
   return wsClients.get(port);
 }
+
+
 
 
 

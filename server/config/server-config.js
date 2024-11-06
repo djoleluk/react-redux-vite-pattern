@@ -1,11 +1,14 @@
 const routes = {
     root: '/',
-    pending_user_requests_route: '/api/pendingrequests'
+    get_users_route: '/api/users',
+    remove_user_route: '/api/users/:user_id'
 }
 
 const actions = {
-    fetch_pending_users_requests: 'SELECT * FROM pendingUsersRequests', // replace with some_table
-    fetch_pending_user_requests_response: 'fetchPendingUsersRequestsResponse'
+    get_users: 'SELECT * FROM users',
+    get_users_response: 'getUsersResponse',
+    remove_user: 'DELETE FROM users WHERE user_id = $1',
+    remove_user_response: 'removeUserResponse'
 }
 
 const ports = {
