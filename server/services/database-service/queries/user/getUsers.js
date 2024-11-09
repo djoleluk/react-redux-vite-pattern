@@ -3,6 +3,7 @@ const { contactTableAndSendDataToWebsocket } =  require('../../../../utilities/d
 const sendArrayResponseToClient = require('../../utils/sendArrayResponseToClient');
 
 async function getUsers(webSocket) {
+    // add error handling here..
     await contactTableAndSendDataToWebsocket(webSocket, config.actions.get_users, [], (items, ws) => { 
         console.log("Items: ", items);
         sendArrayResponseToClient(config.actions.get_users_response, items, ws); 

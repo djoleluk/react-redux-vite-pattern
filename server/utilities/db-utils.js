@@ -1,13 +1,9 @@
 const pool = require('../config/db-config');
 const moment = require('moment-timezone');
 
-async function queryDatabase(query, params, webSocket) {
-    try {
-        const result = await pool.query(query, params);
-        return withAdjustedTimezone(result);
-    } catch (error) {
-		webSocket.send(JSON.stringify({action: 'error', message: error.message}));
-	}
+async function queryDatabase(query, params) {
+   const result = await pool.query(query, params);
+    return withAdjustedTimezone(result);
 }
 
 function getSystemTimezone() {
@@ -24,19 +20,12 @@ function withAdjustedTimezone(queryResult) {
 }
 
 async function contactTableAndSendDataToWebsocket(webSocket, query, queryParams, callback) {
-	try {
-		const rows = await queryDatabase(query, queryParams, webSocket);
-        if (callback) {
-            callback(rows, webSocket);
-			return rows;
-        }
-        return rows; // Return the query result
-	} catch(error) {
-		if (webSocket) {
-            webSocket.send(JSON.stringify({action: 'error', message: error.message}));
-        }
-		return []; // Return an empty array in case of error
-	}
+	const rows = await queryDatabase(query, queryParams, webSocket);
+    if (callback) {
+        callback(rows, webSocket);
+		return rows;
+    }
+    return rows; // Return the query result
 }
 
 module.exports = {

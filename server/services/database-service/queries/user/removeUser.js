@@ -3,6 +3,7 @@ const { contactTableAndSendDataToWebsocket } = require('../../../../utilities/db
 const sendArrayResponseToClient = require('../../utils/sendArrayResponseToClient');
 
 async function removeUser(userId, webSocket) {
+    // add error handlind here..
     await contactTableAndSendDataToWebsocket(webSocket, config.actions.remove_user, [userId], (result, ws) => {
         console.log('User id: ', userId);
         if (result && result.rowCount > 0) {
